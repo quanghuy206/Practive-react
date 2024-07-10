@@ -1,20 +1,30 @@
 import Table from 'react-bootstrap/Table';
+import ReactPaginate from 'react-paginate';
 import { fetchAllUser } from '../services/UserService';
 import { useEffect, useState } from 'react';
 
 const TableUsers = () => {
   const [listUsers,setListUsers] = useState([])
+  const [totalUsers,setTotalUsers] = useState(0)
+  const [totalPages,setTotalPage] = useState(0)
+
   useEffect(() => {
-    getAllUsers();
+    getAllUsers(1);
   },[])
-  const getAllUsers = async () => {
-    let res = await fetchAllUser();
-    if(res && res.data && res.data.data) {
-      setListUsers(res.data.data)
+
+  const getAllUsers = async (page) => {
+    let res = await fetchAllUser(page);
+    if(res && res.data) {
+      setTotalPage(res.total_pages)
+      setTotalUsers(res.total)
+      setListUsers(res.data)
     }
   }
-  console.log(listUsers)
 
+  const handlePageClick = (event) => {
+    getAllUsers(+event.selected + 1)
+  }
+  
     return (
     <>
      <Table striped bordered hover>
@@ -33,8 +43,8 @@ const TableUsers = () => {
               <tr key={`users-${index}`}>
                 <td>{item.id}</td>
                 <td>{item.email}</td>
-                <td>${item.first_name}</td>
-                <td>${item.last_name}</td>
+                <td>{item.first_name}</td>
+                <td>{item.last_name}</td>
             </tr>
             )
           })
@@ -43,6 +53,25 @@ const TableUsers = () => {
        
       </tbody>
     </Table>
+    <ReactPaginate
+        nextLabel="next >"
+        onPageChange={handlePageClick}
+        pageRangeDisplayed={5}
+        pageCount={totalPages}
+        previousLabel="< previous"
+        ageClassName="page-item"
+        pageLinkClassName="page-link"
+        previousClassName="page-item"
+        previousLinkClassName="page-link"
+        nextClassName="page-item"
+        nextLinkClassName="page-link"
+        breakLabel="..."
+        breakClassName="page-item"
+        breakLinkClassName="page-link"
+        containerClassName="pagination"
+        activeClassName="active"
+        renderOnZeroPageCount={null}
+      />
     </>)
 }
 export default TableUsers;
