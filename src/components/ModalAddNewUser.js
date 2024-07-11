@@ -26,7 +26,12 @@ const ModalAddNewUser = (props) => {
   }
   return (
     <>
-      <Modal show={show} onHide={handleClose}>
+      <Modal 
+        show={show} 
+        onHide={handleClose}
+        backdrop="static"
+        keyboard={false}
+      >
         <Modal.Header closeButton>
           <Modal.Title>Add New Users</Modal.Title>
         </Modal.Header>
@@ -56,7 +61,7 @@ const ModalAddNewUser = (props) => {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleSaveUser}>
+          <Button variant="primary" onClick={() => handleSaveUser()}>
             Save Changes
           </Button>
         </Modal.Footer>

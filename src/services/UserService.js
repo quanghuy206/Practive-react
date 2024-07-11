@@ -1,14 +1,16 @@
 // import axios from "axios"
-import axios from './customize-axios'
+import axios from "./customize-axios";
 const fetchAllUser = (page) => {
-   return axios.get(`/api/users?page=${page}`)
+  return axios.get(`/api/users?page=${page}`);
+};
 
-}
+const postCreateUser = (name, job) => axios.post("/api/users", { name, job });
 
-const postCreateUser = (name,job) => axios.post("/api/users",{name,job})
+const putUpdateUser = (name, job) => {
+  return axios.put("/api/users/", { name, job });
+};
+const deleteUser = (id) => {
+  return axios.delete(`/api/users/${id}`);
+};
 
-const putUpdateUser = (name,job) =>  {
-   return axios.put("/api/users/",{name,job})
-}
-
-export {fetchAllUser , postCreateUser,putUpdateUser}
+export { fetchAllUser, postCreateUser, putUpdateUser, deleteUser };

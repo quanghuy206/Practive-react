@@ -5,6 +5,7 @@ import { fetchAllUser } from "../services/UserService";
 import { useEffect, useState } from "react";
 import ModalEditUser from "./ModalEditUser";
 import _, { cloneDeep } from "lodash";
+import ModalComfirm from "./ModalConfirm";
 
 const TableUsers = () => {
   const [listUsers, setListUsers] = useState([]);
@@ -14,18 +15,27 @@ const TableUsers = () => {
   const [IsShowModalAddNew, setIsShowModalAddNew] = useState(false);
   const [IsShowModalEdit, setIsShowModalEdit] = useState(false);
   const [dataEditUser, setDataEditUser] = useState({});
+  const [isShowModalDelete,setIsShowModalDelete] = useState(false)
+  const [dataDeleteUser,setDataDeleteUser] = useState({})
   //Close Toast
   const handleClose = () => {
     setIsShowModalAddNew(false);
     setIsShowModalEdit(false);
+    setIsShowModalDelete(false)
   };
+
   //Post User
   const handleUpdateTable = (user) => {
     setListUsers([user, ...listUsers]);
   };
 
-  //Edit user
+  //Show Modal Eidt User
+  const handleEditUser = (user) => {
+    setDataEditUser(user);
+    setIsShowModalEdit(true);
+  };
 
+  //Update User From Modal
   const handleUpdateFromModal = (user) => {
     const cloneUsers = _.cloneDeep(listUsers);
     let index = listUsers.findIndex((item) => item.id === user.id);
@@ -33,8 +43,19 @@ const TableUsers = () => {
     setListUsers(cloneUsers);
   };
 
+  //Delete User 
+  const handleDeleteUser = (user) => {
+    setIsShowModalDelete(true);
+    setDataDeleteUser(user);
+  }
+  const handleDeleteUserFromModal = (user) => {
+    let cloneListUsers = _.cloneDeep(listUsers);
+    cloneListUsers = cloneListUsers.filter(item => item.id !== user.id);
+    setListUsers(cloneListUsers)
+  }
+
+    //call GetAll
   useEffect(() => {
-    //call api
     getAllUsers(1);
   }, []);
 
@@ -47,17 +68,13 @@ const TableUsers = () => {
       setListUsers(res.data);
     }
   };
+
   //Pagination Table
   const handlePageClick = (event) => {
     getAllUsers(+event.selected + 1);
   };
 
-  //Edit User
-
-  const handleEditUser = (user) => {
-    setDataEditUser(user);
-    setIsShowModalEdit(true);
-  };
+  
   return (
     <>
       <div className="my-3 flex-col">
@@ -98,7 +115,7 @@ const TableUsers = () => {
                     >
                       Edit
                     </button>
-                    <button className="btn btn-danger">Delete</button>
+                    <button className="btn btn-danger" onClick={() => handleDeleteUser(item)}>Delete</button>
                   </td>
                 </tr>
               );
@@ -134,6 +151,13 @@ const TableUsers = () => {
         handleClose={handleClose}
         dataEditUser={dataEditUser}
         handleUpdateFromModal={handleUpdateFromModal}
+      />
+
+      <ModalComfirm 
+        show={isShowModalDelete}
+        handleClose={handleClose}
+        dataDeleteUser={dataDeleteUser}
+        handleDeleteUserFromModal={handleDeleteUserFromModal}
       />
     </>
   );
