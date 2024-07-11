@@ -4,4 +4,11 @@ const fetchAllUser = (page) => {
    return axios.get(`/api/users?page=${page}`)
 
 }
-export {fetchAllUser}
+
+const postCreateUser = (name,job) => axios.post("/api/users",{name,job})
+
+const putUpdateUser = (name,job) =>  {
+   return axios.put("/api/users/",{name,job})
+}
+
+export {fetchAllUser , postCreateUser,putUpdateUser}
